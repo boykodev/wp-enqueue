@@ -11,4 +11,13 @@ $index = 0; // TODO multiple inputs
 <input type="text" name="<?= $handle ?>[]" value="<?= $handle_value ?>" placeholder="Add handle">
 
 <?php $path_value = (isset($path_option[$index])) ? esc_attr($path_option[$index]) : '' ?>
-<input type="text" name="<?= $path ?>[]" value="<?= $path_value ?>" placeholder="Add path">
+<select name="<?= $path ?>[]" id="path-select">
+    <?php
+    $scripts = scan_for_files();
+    foreach ($scripts as $script) :
+        ?>
+        <option value="<?= $script['full'] ?>" <?= ($path_value == $script['full']) ? 'selected' : '' ?>><?= $script['short'] ?></option>
+        <?php
+    endforeach; ?>
+</select>
+<?php  ?>
