@@ -1,14 +1,14 @@
 <?php
 
-function scan_for_files() {
+function scan_for_files($ext) {
     $root = $_SERVER['DOCUMENT_ROOT'];
 
     $theme_uri = get_template_directory_uri();
 
     $theme_dir = preg_replace('/https?:\/\/[^\/]+/i', '', $theme_uri);
 
-    $files = rglob($root . $theme_dir . '/*.js');
-    $scripts = array();
+    $files = rglob($root . $theme_dir . "/*.$ext");
+    $result = array();
     $root_preg = preg_quote($root, '/');
     $theme_preg = preg_quote($theme_dir, '/');
 
@@ -17,10 +17,10 @@ function scan_for_files() {
         $full_path = home_url() . $strip_root;
         $short_path = preg_replace("/$theme_preg/", '', $strip_root, 1);
         $temp = array('full' => $full_path, 'short' => $short_path);
-        $scripts[] = $temp;
+        $result[] = $temp;
     }
 
-    return $scripts;
+    return $result;
 }
 
 // recursive glob function

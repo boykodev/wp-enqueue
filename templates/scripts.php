@@ -1,23 +1,45 @@
 <?php
-$handle = 'wpenq_scripts_handle';
-$handle_option = get_option($handle);
 $path = 'wpenq_scripts_path';
 $path_option = get_option($path);
-$index = 0; // TODO multiple inputs
 ?>
-<p>Add script:</p>
-
-<?php $handle_value = (isset($handle_option[$index])) ? esc_attr($handle_option[$index]) : '' ?>
-<input type="text" name="<?= $handle ?>[]" value="<?= $handle_value ?>" placeholder="Add handle">
-
-<?php $path_value = (isset($path_option[$index])) ? esc_attr($path_option[$index]) : '' ?>
-<select name="<?= $path ?>[]" id="path-select">
+<p>
+    <button class="button wpenq-add-script">Add script:</button>
+</p>
+<div class="wpenq-scripts-wrap">
     <?php
-    $scripts = scan_for_files();
-    foreach ($scripts as $script) :
+    // get all scripts
+    $scripts = scan_for_files('js');
+    for ($i = 0; $path_value = (isset($path_option[$i])) ? esc_attr($path_option[$i]) : ''; $i++) :
         ?>
-        <option value="<?= $script['full'] ?>" <?= ($path_value == $script['full']) ? 'selected' : '' ?>><?= $script['short'] ?></option>
+        <div class="wrap">
+            <select name="<?= $path ?>[]" class="path-select">
+                <?php
+                foreach ($scripts as $script) :
+                    $selected = ($path_value == $script['full']) ? 'selected' : '';
+                    ?>
+                    <option value="<?= $script['full'] ?>" <?= $selected ?>>
+                        <?= $script['short'] ?>
+                    </option>
+                    <?php
+                endforeach; ?>
+            </select>
+            <button class="button wpenq-remove">&#10006;</button>
+        </div>
         <?php
-    endforeach; ?>
-</select>
-<?php  ?>
+    endfor;
+    ?>
+</div>
+<?php // template for 'Add script' button ?>
+<template class="wpenq-scripts-tpl">
+    <div class="wrap">
+        <select name="<?= $path ?>[]" class="path-select">
+            <?php
+            foreach ($scripts as $script) :
+                ?>
+                <option value="<?= $script['full'] ?>"><?= $script['short'] ?></option>
+                <?php
+            endforeach; ?>
+        </select>
+        <button class="button wpenq-remove">&#10006;</button>
+    </div>
+</template>

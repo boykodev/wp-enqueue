@@ -10,11 +10,10 @@ function load_scripts() {
 
     $index = 0; // TODO multiple scripts
 
-    $handle_value = (isset($handle_option[$index])) ? esc_attr($handle_option[$index]) : '';
     $path_value = (isset($path_option[$index])) ? esc_attr($path_option[$index]) : '';
 
-    if ($handle_value && $path_value) {
-        wp_enqueue_script($handle_value, get_template_directory_uri() . $path_value);
+    if ($path_value) {
+        wp_enqueue_script('wpenq_script', get_template_directory_uri() . $path_value);
     }
 }
 

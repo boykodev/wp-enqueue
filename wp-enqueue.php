@@ -18,3 +18,6 @@ include_once('load.php');
 
 /* scan directories for scripts and styles */
 include_once('scan_for_files.php');
+
+/* enqueue plugin assets */
+include_once('assets.php');
