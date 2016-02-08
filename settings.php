@@ -15,6 +15,7 @@ add_action('admin_menu', 'wpenq_create_menu');
 function wpenq_custom_settings() {
     /* Register settings */
     register_setting('wpenq-settings-group', 'wpenq_scripts_path');
+    register_setting('wpenq-settings-group', 'wpenq_scripts_pos');
     register_setting('wpenq-settings-group', 'wpenq_styles_path');
 
     /* Add sections */
