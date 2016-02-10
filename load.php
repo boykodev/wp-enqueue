@@ -1,20 +1,76 @@
 <?php
 
-// load scripts test
-function load_scripts() {
-    $handle = 'wpenq_scripts_handle';
-    $path = 'wpenq_scripts_path';
-
-    $handle_option = get_option($handle);
+// load styles
+function wpenq_load_styles() {
+    $path = 'wpenq_styles_path';
+    $cond = 'wpenq_styles_cond';
     $path_option = get_option($path);
+    $cond_option = get_option($cond);
 
-    $index = 0; // TODO multiple scripts
+    // prevent empty options warning
+    if ($path_option && $cond_option) {
 
-    $path_value = (isset($path_option[$index])) ? esc_attr($path_option[$index]) : '';
+        $result = array_map_duplicates($path_option, $cond_option);
 
-    if ($path_value) {
-        wp_enqueue_script('wpenq_script', get_template_directory_uri() . $path_value);
+        foreach ($result as $key => $values) {
+            foreach ($values as $value) {
+                if ($key == 'admin') {
+                    // enq admin
+                } elseif (strpos($key, 'IE') !== false) {
+                    // enq ie
+                }
+            }
+        }
+
     }
 }
 
-add_action('wp_enqueue_scripts', 'load_scripts');
+// load scripts
+function wpenq_load_scripts() {
+    $path = 'wpenq_styles_path';
+    $cond = 'wpenq_styles_cond';
+    $path_option = get_option($path);
+    $cond_option = get_option($cond);
+
+    // prevent empty options warning
+    if ($path_option && $cond_option) {
+
+        $result = array_map_duplicates($path_option, $cond_option);
+
+        foreach ($result as $key => $values) {
+            foreach ($values as $value) {
+                if ($key == 'head') {
+                    // enq head
+                } elseif ($key == 'footer') {
+                    // enq footer
+                } elseif ($key == 'admin') {
+                    // enq admin
+                } elseif (strpos($key, 'IE') !== false) {
+                    // enq ie
+                }
+            }
+        }
+
+    }
+}
+
+function wpenq_load() {
+    wpenq_load_styles();
+    wpenq_load_scripts();
+}
+
+add_action('wp_enqueue_scripts', 'wpenq_load');
+
+/**
+ * Map values of one array to another,
+ * preserving duplicate keys.
+ *
+ * @return array Mapped array.
+ */
+function array_map_duplicates($arr_vals, $arr_keys) {
+    $result = array();
+    foreach ($arr_keys as $key => $value) {
+        $result[$value][] = $arr_vals[$key];
+    }
+    return $result;
+}

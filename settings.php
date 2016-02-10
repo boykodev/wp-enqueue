@@ -15,8 +15,9 @@ add_action('admin_menu', 'wpenq_create_menu');
 function wpenq_custom_settings() {
     /* Register settings */
     register_setting('wpenq-settings-group', 'wpenq_scripts_path');
-    register_setting('wpenq-settings-group', 'wpenq_scripts_pos');
+    register_setting('wpenq-settings-group', 'wpenq_scripts_cond');
     register_setting('wpenq-settings-group', 'wpenq_styles_path');
+    register_setting('wpenq-settings-group', 'wpenq_styles_cond');
 
     /* Add sections */
     add_settings_section('wpenq-scripts', 'WP Enqueue Scripts', 'wpenq_scripts', 'wpenq-menu');

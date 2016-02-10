@@ -2,7 +2,7 @@
 
 function plugin_assets($hook) {
     global $wpenq_page;
-    // enque only for wp-enqueue page
+    // enqueue only for wp-enqueue page
     if ($hook != $wpenq_page) return;
 
     $url = plugin_dir_url(__FILE__);

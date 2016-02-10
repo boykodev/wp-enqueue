@@ -1,14 +1,24 @@
 <?php
-$handle = 'wpenq_styles_handle';
-$handle_option = get_option($handle);
 $path = 'wpenq_styles_path';
 $path_option = get_option($path);
-$index = 0; // TODO multiple inputs
+$cond = 'wpenq_styles_cond';
+$cond_option = get_option($cond);
+$conditions = array('admin', 'IE 10', 'IE 9', 'IE 8');
 ?>
-<p>Add style:</p>
-
-<?php $handle_value = (isset($handle_option[$index])) ? esc_attr($handle_option[$index]) : '' ?>
-<input type="text" name="<?= $handle ?>[]" value="<?= $handle_value ?>" placeholder="Add handle">
-
-<?php $path_value = (isset($path_option[$index])) ? esc_attr($path_option[$index]) : '' ?>
-<input type="text" name="<?= $path ?>[]" value="<?= $path_value ?>" placeholder="Add path">
+<p>
+    <button class="button wpenq-add-style">Add style:</button>
+</p>
+<div class="wpenq-wrap wpenq-styles-wrap">
+    <?php
+    // get all scripts
+    $files = scan_for_files('css');
+    for ($i = 0; $path_value = (isset($path_option[$i])) ? esc_attr($path_option[$i]) : ''; $i++) :
+        include('single-wrap.php');
+    endfor;
+    ?>
+</div>
+<?php // template for 'Add script' button ?>
+<template class="wpenq-styles-tpl">
+    <?php
+    include('single-wrap.php'); ?>
+</template>

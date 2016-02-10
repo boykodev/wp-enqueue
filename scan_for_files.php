@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This function scans theme folder for files.
+ *
+ * @param $ext string File extension to scan
+ * @return array Associative array of full and short file path.
+ */
 function scan_for_files($ext) {
     $root = $_SERVER['DOCUMENT_ROOT'];
 
