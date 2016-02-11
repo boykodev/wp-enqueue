@@ -8,19 +8,63 @@ Author: Serge Boyko
 Author URI: http://www.boykodev.com
 */
 
-class WP_Enqueue_plugin {
+class WP_Enqueue_Plugin {
 
-    private $data = array();
+    private $options = array();
 
     public function __construct() {
+        $this->set_options();
     }
 
-    private function set_option_name($option) {
+    private function set_options() {
+        $options = array(
+            'scripts' => array(
+                'path' => 'wpenq_scripts_path',
+                'cond' => 'wpenq_scripts_cond',
+                'conditions' => array(
+                    'head', 'footer', 'admin'
+                )
+            ),
+            'styles' => array(
+                'path' => 'wpenq_styles_path',
+                'cond' => 'wpenq_styles_cond',
+                'conditions' => array(
+                    'admin', 'IE 10', 'IE 9', 'IE 8'
+                )
+            )
+        );
+
+        foreach ($options as $domain => $option) {
+            foreach ($option as $alias => $value) {
+                $this->set_option($domain, $alias, $value);
+            }
+        }
+
     }
 
+    private function set_option($domain, $alias, $value) {
+        if ($alias == 'conditions') {
+            $this->options[$domain][$alias] = $value;
+        } else {
+            $this->options[$domain][$alias]['option_name'] = $value;
+            $this->options[$domain][$alias]['option_value'] = get_option($value);
+        }
+    }
+
+    public function get_option($domain, $alias) {
+        return $this->options[$domain][$alias]['option_value'];
+    }
+
+    public function get_option_name($domain, $alias) {
+        return $this->options[$domain][$alias]['option_name'];
+    }
+
+    public function get_conditions($domain) {
+        return $this->options[$domain]['conditions'];
+    }
 }
 
-$wpenq_plugin = new WP_Enqueue_plugin();
+$wpenq = new WP_Enqueue_Plugin();
 
 /* add menu and settings */
 include_once('settings.php');
@@ -31,8 +75,8 @@ include_once('callbacks.php');
 /* load scripts and styles */
 include_once('load.php');
 
-/* scan directories for scripts and styles */
-include_once('scan_for_files.php');
+/* helper class */
+include_once('helper.php');
 
 /* enqueue plugin assets */
 include_once('assets.php');
