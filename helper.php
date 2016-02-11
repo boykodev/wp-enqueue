@@ -3,6 +3,20 @@
 class WP_Enqueue_Helper {
 
     /**
+     * Map values of one array to another,
+     * preserving duplicate keys.
+     *
+     * @return array Mapped array.
+     */
+    public static function array_map_duplicates($arr_vals, $arr_keys) {
+        $result = array();
+        foreach ($arr_keys as $key => $value) {
+            $result[$value][] = $arr_vals[$key];
+        }
+        return $result;
+    }
+
+    /**
      * This function scans theme folder for files.
      *
      * @param $ext string File extension to scan

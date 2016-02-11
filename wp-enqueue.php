@@ -8,12 +8,29 @@ Author: Serge Boyko
 Author URI: http://www.boykodev.com
 */
 
+/* helper class */
+include_once('helper.php');
+
 class WP_Enqueue_Plugin {
 
+    private $index = array();
     private $options = array();
+    private $option_map = array();
 
     public function __construct() {
+        $this->set_index();
         $this->set_options();
+        $this->set_option_map();
+
+        $this->enqueue();
+    }
+
+    private function set_index() {
+        $domains = array('scripts', 'styles');
+
+        foreach ($domains as $domain) {
+            $this->index[$domain] = 0;
+        }
     }
 
     private function set_options() {
@@ -29,7 +46,7 @@ class WP_Enqueue_Plugin {
                 'path' => 'wpenq_styles_path',
                 'cond' => 'wpenq_styles_cond',
                 'conditions' => array(
-                    'admin', 'IE 10', 'IE 9', 'IE 8'
+                    'head', 'admin', 'IE 10', 'IE 9', 'IE 8'
                 )
             )
         );
@@ -49,6 +66,69 @@ class WP_Enqueue_Plugin {
             $this->options[$domain][$alias]['option_name'] = $value;
             $this->options[$domain][$alias]['option_value'] = get_option($value);
         }
+    }
+
+    private function set_option_map() {
+        $domains = array('scripts', 'styles');
+
+        foreach ($domains as $domain) {
+            $this->option_map[$domain] = WP_Enqueue_Helper::array_map_duplicates(
+                $this->get_option($domain, 'path'), $this->get_option($domain, 'cond')
+            );
+        }
+    }
+
+    private function enqueue_frontend() {
+
+        if ($scripts = $this->get_option_map('scripts')) {
+
+            foreach ($scripts as $key => $values) {
+                foreach ($values as $value) {
+                    $id = $this->get_index('scripts');
+
+                    if ($key == 'head') wp_enqueue_script("wpenq-script-$id", $value);
+                    if ($key == 'footer') wp_enqueue_script("wpenq-script-$id", $value, false, false, true);
+
+                    if ($key != 'admin') $this->add_index('scripts');
+                }
+            }
+
+        }
+
+        if ($styles = $this->get_option_map('styles')) {
+
+            foreach ($styles as $key => $values) {
+                foreach ($values as $value) {
+                    $id = $this->get_index('scripts');
+
+                    if ($key == 'head') wp_enqueue_style("wpenq-style-$id", $value);
+
+                    if ($key != 'admin') $this->add_index('scripts');
+                }
+            }
+
+        }
+    }
+
+    private function enqueue_admin() {
+
+    }
+
+    private function enqueue() {
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend'));
+        //add_action('admin_enqueue_scripts', array($this, 'enqueue_admin'));
+    }
+
+    private function add_index($domain) {
+        $this->index[$domain]++;
+    }
+
+    private function get_index($domain) {
+        return $this->index[$domain];
+    }
+
+    private function get_option_map($domain) {
+        return $this->option_map[$domain];
     }
 
     public function get_option($domain, $alias) {
@@ -74,9 +154,6 @@ include_once('callbacks.php');
 
 /* load scripts and styles */
 include_once('load.php');
-
-/* helper class */
-include_once('helper.php');
 
 /* enqueue plugin assets */
 include_once('assets.php');
