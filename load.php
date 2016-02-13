@@ -1,76 +1,73 @@
 <?php
 
-// load styles
-function wpenq_load_styles() {
-    $path = 'wpenq_styles_path';
-    $cond = 'wpenq_styles_cond';
-    $path_option = get_option($path);
-    $cond_option = get_option($cond);
+function enqueue_frontend() {
+    global $wpenq;
 
-    // prevent empty options warning
-    if ($path_option && $cond_option) {
+    if ($scripts = $wpenq->get_option_map('scripts')) {
+        $index = 0;
 
-        $result = array_map_duplicates($path_option, $cond_option);
-
-        foreach ($result as $key => $values) {
+        foreach ($scripts as $key => $values) {
             foreach ($values as $value) {
+
+                if ($key != 'admin') $index++; // admin scripts don't affect counter
+                if ($key == 'head') wp_enqueue_script("wpenq-script-$index", $value);
+                if ($key == 'footer') wp_enqueue_script("wpenq-script-$index", $value, false, false, true);
+
+            }
+        }
+
+    }
+
+    if ($styles = $wpenq->get_option_map('styles')) {
+        $index = 0;
+
+        foreach ($styles as $key => $values) {
+            foreach ($values as $value) {
+
+                if ($key != 'admin') $index++; // admin styles don't affect counter
+                if ($key == 'head') wp_enqueue_style("wpenq-style-$index", $value);
+
+            }
+        }
+
+    }
+}
+
+function enqueue_admin() {
+    global $wpenq;
+
+    if ($scripts = $wpenq->get_option_map('scripts')) {
+        $index = 0;
+
+        foreach ($scripts as $key => $values) {
+            foreach ($values as $value) {
+
                 if ($key == 'admin') {
-                    // enq admin
-                } elseif (strpos($key, 'IE') !== false) {
-                    // enq ie
+                    $index++; // increment only for admin scripts
+                    wp_enqueue_script("wpenq-admin-script-$index", $value);
                 }
+
             }
         }
 
     }
-}
 
-// load scripts
-function wpenq_load_scripts() {
-    $path = 'wpenq_styles_path';
-    $cond = 'wpenq_styles_cond';
-    $path_option = get_option($path);
-    $cond_option = get_option($cond);
+    if ($styles = $wpenq->get_option_map('styles')) {
+        $index = 0;
 
-    // prevent empty options warning
-    if ($path_option && $cond_option) {
-
-        $result = array_map_duplicates($path_option, $cond_option);
-
-        foreach ($result as $key => $values) {
+        foreach ($styles as $key => $values) {
             foreach ($values as $value) {
-                if ($key == 'head') {
-                    // enq head
-                } elseif ($key == 'footer') {
-                    // enq footer
-                } elseif ($key == 'admin') {
-                    // enq admin
-                } elseif (strpos($key, 'IE') !== false) {
-                    // enq ie
+
+                if ($key == 'admin') {
+                    $index++; // increment only for admin styles
+                    wp_enqueue_style("wpenq-admin-style-$index", $value);
                 }
+
             }
         }
 
     }
 }
 
-function wpenq_load() {
-    wpenq_load_styles();
-    wpenq_load_scripts();
-}
-
-add_action('wp_enqueue_scripts', 'wpenq_load');
-
-/**
- * Map values of one array to another,
- * preserving duplicate keys.
- *
- * @return array Mapped array.
- */
-function array_map_duplicates($arr_vals, $arr_keys) {
-    $result = array();
-    foreach ($arr_keys as $key => $value) {
-        $result[$value][] = $arr_vals[$key];
-    }
-    return $result;
-}
+add_action('wp_enqueue_scripts', 'enqueue_frontend');
+add_action('admin_enqueue_scripts', 'enqueue_admin');

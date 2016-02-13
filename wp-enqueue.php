@@ -22,7 +22,7 @@ class WP_Enqueue_Plugin {
         $this->set_options();
         $this->set_option_map();
 
-        $this->enqueue();
+        //$this->enqueue();
     }
 
     private function set_index() {
@@ -78,44 +78,8 @@ class WP_Enqueue_Plugin {
         }
     }
 
-    private function enqueue_frontend() {
-
-        if ($scripts = $this->get_option_map('scripts')) {
-
-            foreach ($scripts as $key => $values) {
-                foreach ($values as $value) {
-                    $id = $this->get_index('scripts');
-
-                    if ($key == 'head') wp_enqueue_script("wpenq-script-$id", $value);
-                    if ($key == 'footer') wp_enqueue_script("wpenq-script-$id", $value, false, false, true);
-
-                    if ($key != 'admin') $this->add_index('scripts');
-                }
-            }
-
-        }
-
-        if ($styles = $this->get_option_map('styles')) {
-
-            foreach ($styles as $key => $values) {
-                foreach ($values as $value) {
-                    $id = $this->get_index('scripts');
-
-                    if ($key == 'head') wp_enqueue_style("wpenq-style-$id", $value);
-
-                    if ($key != 'admin') $this->add_index('scripts');
-                }
-            }
-
-        }
-    }
-
-    private function enqueue_admin() {
-
-    }
-
     private function enqueue() {
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend'));
+        //add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend'));
         //add_action('admin_enqueue_scripts', array($this, 'enqueue_admin'));
     }
 
@@ -127,7 +91,7 @@ class WP_Enqueue_Plugin {
         return $this->index[$domain];
     }
 
-    private function get_option_map($domain) {
+    public function get_option_map($domain) {
         return $this->option_map[$domain];
     }
 
@@ -145,6 +109,8 @@ class WP_Enqueue_Plugin {
 }
 
 $wpenq = new WP_Enqueue_Plugin();
+
+//add_action('wp_enqueue_scripts', array($wpenq, 'enqueue_frontend'));
 
 /* add menu and settings */
 include_once('settings.php');
