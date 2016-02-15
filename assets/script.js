@@ -14,6 +14,9 @@
             e.preventDefault();
             var $wrap = $(this).closest('.wrap');
             $wrap.insertAfter($wrap.next());
+        }).on('dblclick', '.es-input', function (e) {
+            e.stopPropagation();
+            $(this).val('').click();
         });
 
         // add new script
@@ -36,15 +39,18 @@
 
         // make select editable - thanks to
         // https://github.com/indrimuska/jquery-editable-select
-        $('.path-select').each(function () {
-            $(this).editableSelect();
-        });
-        $('.condition-select').each(function () {
-            $(this).editableSelect();
+        var esArgs = {
+            effects: 'slide',
+            onCreate: function (input) {
+                input.attr('autocomplete', 'off');
+            }
+        };
+        $('.path-select, .condition-select').each(function () {
+            $(this).editableSelect(esArgs);
         });
         function newEditableSelect(newElement) {
-            newElement.find('.path-select').editableSelect();
-            newElement.find('.condition-select').editableSelect();
+            newElement.find('.path-select').editableSelect(esArgs);
+            newElement.find('.condition-select').editableSelect(esArgs);
         }
     });
 

@@ -4,11 +4,10 @@
         foreach ((array)$files as $file) :
             $selected = ($path_value == $file['path']) ? 'selected' : '';
             ?>
-            <option value="<?= $file['path'] ?>" <?= $selected ?>>
-                <?= $file['path'] ?>
-            </option>
+            <option value="<?= $file['path'] ?>" <?= $selected ?>><?= $file['path'] ?></option>
             <?php
-        endforeach; ?>
+        endforeach;
+        ?>
     </select>
     <select name="<?= $cond ?>[]" class="condition-select">
         <?php
@@ -16,11 +15,10 @@
         foreach ((array)$conditions as $condition) :
             $selected = ($cond_value == $condition) ? 'selected' : '';
             ?>
-            <option value="<?= $condition ?>" <?= $selected ?>>
-                <?= $condition ?>
-            </option>
+            <option value="<?= $condition ?>" <?= $selected ?>><?= $condition ?></option>
             <?php
-        endforeach; ?>
+        endforeach;
+        ?>
     </select>
     <button class="button wpenq-up">&#11014;</button>
     <button class="button wpenq-down">&#11015;</button>
