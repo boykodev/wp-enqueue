@@ -23,3 +23,16 @@ function wpenq_custom_settings() {
     add_settings_section('wpenq-scripts', 'WP Enqueue Scripts', 'wpenq_scripts', 'wpenq-menu');
     add_settings_section('wpenq-styles', 'WP Enqueue Styles', 'wpenq_styles', 'wpenq-menu');
 }
+
+/* callback functions with content */
+function wpenq_menu() {
+    require_once('templates/menu.php');
+}
+
+function wpenq_scripts() {
+    require_once('templates/scripts.php');
+}
+
+function wpenq_styles() {
+    require_once('templates/styles.php');
+}

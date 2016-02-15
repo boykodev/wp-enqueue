@@ -20,15 +20,32 @@
         $('.wpenq-add-script').on('click', function (e) {
             e.preventDefault();
             var scriptTpl = $('.wpenq-scripts-tpl').html();
-            $(scriptTpl).hide().appendTo('.wpenq-scripts-wrap').fadeIn(400);
+            var newElement = $(scriptTpl).hide().appendTo('.wpenq-scripts-wrap');
+            newEditableSelect(newElement);
+            newElement.fadeIn(400);
         });
 
         // add new style
         $('.wpenq-add-style').on('click', function (e) {
             e.preventDefault();
             var styleTpl = $('.wpenq-styles-tpl').html();
-            $(styleTpl).hide().appendTo('.wpenq-styles-wrap').fadeIn(400);
+            var newElement = $(styleTpl).hide().appendTo('.wpenq-styles-wrap');
+            newEditableSelect(newElement);
+            newElement.fadeIn(400);
         });
+
+        // make select editable - thanks to
+        // https://github.com/indrimuska/jquery-editable-select
+        $('.path-select').each(function () {
+            $(this).editableSelect();
+        });
+        $('.condition-select').each(function () {
+            $(this).editableSelect();
+        });
+        function newEditableSelect(newElement) {
+            newElement.find('.path-select').editableSelect();
+            newElement.find('.condition-select').editableSelect();
+        }
     });
 
 })(jQuery);

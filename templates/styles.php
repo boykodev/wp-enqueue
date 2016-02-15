@@ -1,4 +1,5 @@
 <?php
+
 global $wpenq;
 $path = $wpenq->get_option_name('styles', 'path');
 $path_option = $wpenq->get_option('styles', 'path');

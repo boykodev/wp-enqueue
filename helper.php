@@ -10,7 +10,7 @@ class WP_Enqueue_Helper {
      */
     public static function array_map_duplicates($arr_vals, $arr_keys) {
         $result = array();
-        foreach ($arr_keys as $key => $value) {
+        foreach ((array)$arr_keys as $key => $value) {
             $result[$value][] = $arr_vals[$key];
         }
         return $result;
@@ -20,7 +20,7 @@ class WP_Enqueue_Helper {
      * This function scans theme folder for files.
      *
      * @param $ext string File extension to scan
-     * @return array Associative array of full and short file path.
+     * @return array Relative file path.
      */
     public static function scan_for_files($ext) {
         $root = $_SERVER['DOCUMENT_ROOT'];
@@ -34,15 +34,39 @@ class WP_Enqueue_Helper {
         $root_preg = preg_quote($root, '/');
         $theme_preg = preg_quote($theme_dir, '/');
 
-        foreach ($files as $file) {
+        foreach ((array)$files as $file) {
             $strip_root = preg_replace("/$root_preg/", '', $file, 1);
-            $full_path = home_url() . $strip_root;
-            $short_path = preg_replace("/$theme_preg/", '', $strip_root, 1);
-            $temp = array('full' => $full_path, 'short' => $short_path);
+            $path = preg_replace("/$theme_preg/", '', $strip_root, 1);
+            $temp = array('path' => $path);
             $result[] = $temp;
         }
 
         return $result;
+    }
+
+    /**
+     * This function prevents 'Undefined index' notice
+     *
+     * @param $array array Array to check
+     * @param $index mixed Index or indices
+     * @param $default array Default value
+     * @return array Default or passed array
+     */
+    public static function isset_array($array, $index, $default = array()) {
+        if (is_array($index)) {
+            if (count($index) == 1) {
+                if (isset($array[$index[0]])) return $array[$index[0]];
+            }
+            if (count($index) == 2) {
+                if (isset($array[$index[0]][$index[1]])) return $array[$index[0]][$index[1]];
+            }
+            if (count($index) == 3) {
+                if (isset($array[$index[0]][$index[1]][$index[2]])) return $array[$index[0]][$index[1]][$index[2]];
+            }
+        } else {
+            if (isset($array[$index])) return $array[$index];
+        }
+        return $default;
     }
 
     // recursive glob function
@@ -54,3 +78,19 @@ class WP_Enqueue_Helper {
         return $files;
     }
 }
+
+// enqueue plugin assets
+function plugin_assets($hook) {
+    global $wpenq_page;
+    // enqueue only for wp-enqueue page
+    if ($hook != $wpenq_page) return;
+
+    $url = plugin_dir_url(__FILE__);
+    wp_enqueue_style('wpenq_style', $url . 'assets/style.css');
+    wp_enqueue_script('wpenq_script', $url . 'assets/script.js');
+    // 3-rd party assets
+    wp_enqueue_style('editable-select', $url . 'assets/jquery.editable-select.min.css');
+    wp_enqueue_script('editable-select-js', $url . 'assets/jquery.editable-select.min.js');
+}
+
+add_action('admin_enqueue_scripts', 'plugin_assets');

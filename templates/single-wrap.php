@@ -1,11 +1,11 @@
 <div class="wrap">
     <select name="<?= $path ?>[]" class="path-select">
         <?php
-        foreach ($files as $file) :
-            $selected = ($path_value == $file['full']) ? 'selected' : '';
+        foreach ((array)$files as $file) :
+            $selected = ($path_value == $file['path']) ? 'selected' : '';
             ?>
-            <option value="<?= $file['full'] ?>" <?= $selected ?>>
-                <?= $file['short'] ?>
+            <option value="<?= $file['path'] ?>" <?= $selected ?>>
+                <?= $file['path'] ?>
             </option>
             <?php
         endforeach; ?>
@@ -13,7 +13,7 @@
     <select name="<?= $cond ?>[]" class="condition-select">
         <?php
         $cond_value = (isset($cond_option[$i])) ? $cond_option[$i] : '';
-        foreach ($conditions as $condition) :
+        foreach ((array)$conditions as $condition) :
             $selected = ($cond_value == $condition) ? 'selected' : '';
             ?>
             <option value="<?= $condition ?>" <?= $selected ?>>
