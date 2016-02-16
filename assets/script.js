@@ -37,6 +37,19 @@
             newElement.fadeIn(400);
         });
 
+        // show help
+        (function () {
+            var show = true;
+            $('.wpenq-show-help').on('click', function (e) {
+                e.preventDefault();
+                var state = (show) ? 'Hide' : 'Show';
+                $(this).text(state + ' help');
+                show = !show;
+
+                $('.wpenq-help').slideToggle(400);
+            });
+        })();
+
         // make select editable - thanks to
         // https://github.com/indrimuska/jquery-editable-select
         var esArgs = {

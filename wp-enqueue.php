@@ -27,16 +27,14 @@ class WP_Enqueue_Plugin {
                 'path' => 'wpenq_scripts_path',
                 'cond' => 'wpenq_scripts_cond',
                 'conditions' => array(
-                    'head', 'footer', 'admin', 'home', 'single', 'archive', 'category',
-                    '404', 'IE 10', 'IE 9', 'IE 8', 'IE 7', 'IE 6'
+                    'head', 'footer', 'admin', 'home', 'page', 'single', 'category', 'archive'
                 )
             ),
             'styles' => array(
                 'path' => 'wpenq_styles_path',
                 'cond' => 'wpenq_styles_cond',
                 'conditions' => array(
-                    'head', 'admin', 'home', 'single', 'archive', 'category',
-                    '404', 'IE 10', 'IE 9', 'IE 8', 'IE 7', 'IE 6'
+                    'head', 'admin', 'home', 'single', 'page', 'category', 'archive'
                 )
             )
         );
