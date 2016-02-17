@@ -11,7 +11,7 @@ $conditions = $wpenq->get_conditions('scripts');
 ?>
 <p>
     <button class="button wpenq-add-script">Add script:</button>
-    <a href="#" class="wpenq-show-help">Show help</a>
+    <a href="#" class="wpenq-show-help" data-state="Hide">Show help</a>
 </p>
 <p class="wpenq-help">
     Click <code>Add script:</code> to add new JS script<br>
@@ -34,8 +34,10 @@ $conditions = $wpenq->get_conditions('scripts');
 </p>
 <div class="wpenq-wrap wpenq-scripts-wrap">
     <?php
+    // get all files in plugin
+    $files = WP_Enqueue_Helper::scan_for_files('js', 1);
     // get all files in theme
-    $files = WP_Enqueue_Helper::scan_for_files('js');
+    $files = array_merge($files, WP_Enqueue_Helper::scan_for_files('js', 0));
     for ($i = 0; $path_value = (isset($path_option[$i])) ? esc_attr($path_option[$i]) : ''; $i++) :
         include('single-wrap.php');
     endfor;

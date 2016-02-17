@@ -38,17 +38,18 @@
         });
 
         // show help
-        (function () {
-            var show = true;
-            $('.wpenq-show-help').on('click', function (e) {
-                e.preventDefault();
-                var state = (show) ? 'Hide' : 'Show';
-                $(this).text(state + ' help');
-                show = !show;
+        $('.wpenq-show-help').on('click', function (e) {
+            e.preventDefault();
 
-                $('.wpenq-help').slideToggle(400);
-            });
-        })();
+            var state = $(this).data('state');
+            $(this).text(state + ' help');
+
+            if (state === 'Hide') $(this).data('state', 'Show');
+            if (state === 'Show') $(this).data('state', 'Hide');
+
+            var $help = $(this).parent().next('.wpenq-help');
+            $help.slideToggle(400);
+        });
 
         // make select editable - thanks to
         // https://github.com/indrimuska/jquery-editable-select

@@ -2,6 +2,14 @@
 
 class WP_Enqueue_Helper {
 
+    private static $theme_url;
+    private static $plugin_url;
+
+    public static function init() {
+        self::$theme_url = get_template_directory_uri();
+        self::$plugin_url = plugin_dir_url(__FILE__);
+    }
+
     /**
      * Map values of one array to another,
      * preserving duplicate keys.
@@ -20,25 +28,39 @@ class WP_Enqueue_Helper {
      * This function scans theme folder for files.
      *
      * @param $ext string File extension to scan
+     * @param $mode int 0 - theme, 1 - plugin
      * @return array Relative file path.
      */
-    public static function scan_for_files($ext) {
+    public static function scan_for_files($ext, $mode = 0) {
         $root = $_SERVER['DOCUMENT_ROOT'];
 
-        $theme_uri = get_template_directory_uri();
+        switch ($mode) {
+            case 0:
+                $url = get_template_directory_uri();
+                break;
+            case 1:
+                $url = plugin_dir_url(__FILE__) . 'assets/custom';
+                break;
+            default:
+                $url = get_template_directory_uri();
+                break;
+        }
 
-        $theme_dir = preg_replace('/https?:\/\/[^\/]+/i', '', $theme_uri);
+        $dir = preg_replace('/https?:\/\/[^\/]+/i', '', $url);
 
-        $files = self::rglob($root . $theme_dir . "/*.$ext");
+        $files = self::rglob($root . $dir . "/*.$ext");
         $result = array();
         $root_preg = preg_quote($root, '/');
-        $theme_preg = preg_quote($theme_dir, '/');
+        $path_preg = preg_quote($dir, '/');
 
         foreach ((array)$files as $file) {
             $strip_root = preg_replace("/$root_preg/", '', $file, 1);
-            $path = preg_replace("/$theme_preg/", '', $strip_root, 1);
-            $temp = array('path' => $path);
-            $result[] = $temp;
+            $path = preg_replace("/$path_preg/", '', $strip_root, 1);
+            if ($mode == 1) {
+                $result[] = array('path' => 'custom' . $path);
+            } else {
+                $result[] = array('path' => $path);
+            }
         }
 
         return $result;
@@ -69,6 +91,19 @@ class WP_Enqueue_Helper {
         return $default;
     }
 
+    /**
+     * Get full asset URL
+     * @param $value string Short asset URL
+     * @return string Full asset URL
+     */
+    public static function get_full_url($value) {
+        if (mb_stripos($value, 'custom') === 0) {
+            return self::$plugin_url . 'assets/' . $value;
+        } else {
+            return self::$theme_url . $value;
+        }
+    }
+
     // recursive glob function
     private static function rglob($pattern, $flags = 0) {
         $files = glob($pattern, $flags);
@@ -78,6 +113,8 @@ class WP_Enqueue_Helper {
         return $files;
     }
 }
+// static variables init
+WP_Enqueue_Helper::init();
 
 // enqueue plugin assets
 function plugin_assets($hook) {
@@ -86,11 +123,11 @@ function plugin_assets($hook) {
     if ($hook != $wpenq_page) return;
 
     $url = plugin_dir_url(__FILE__);
-    wp_enqueue_style('wpenq_style', $url . 'assets/style.css');
-    wp_enqueue_script('wpenq_script', $url . 'assets/script.js');
+    wp_enqueue_style('wpenq_style', $url . 'assets/plugin/style.css');
+    wp_enqueue_script('wpenq_script', $url . 'assets/plugin/script.js');
     // 3-rd party assets
-    wp_enqueue_style('editable-select', $url . 'assets/jquery.editable-select.min.css');
-    wp_enqueue_script('editable-select-js', $url . 'assets/jquery.editable-select.min.js');
+    wp_enqueue_style('editable-select', $url . 'assets/plugin/jquery.editable-select.min.css');
+    wp_enqueue_script('editable-select-js', $url . 'assets/plugin/jquery.editable-select.min.js');
 }
 
 add_action('admin_enqueue_scripts', 'plugin_assets');

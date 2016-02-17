@@ -9,9 +9,7 @@
             <option value="<?= $file['path'] ?>" <?= $selected ?>><?= $file['path'] ?></option>
             <?php
         endforeach;
-        if (!$flag && !empty($path_value)) {
-            echo "<option value='$path_value' selected>$path_value</option>";
-        }
+        if (!$flag) echo "<option value='$path_value' selected>$path_value</option>";
         ?>
     </select>
     <select name="<?= $cond ?>[]" class="condition-select">
@@ -25,9 +23,7 @@
             <option value="<?= $condition ?>" <?= $selected ?>><?= $condition ?></option>
             <?php
         endforeach;
-        if (!$flag && !empty($cond_value)) {
-            echo "<option value='$cond_value' selected>$cond_value</option>";
-        }
+        if (!$flag) echo "<option value='$cond_value' selected>$cond_value</option>";
         ?>
     </select>
     <button class="button wpenq-up">&#11014;</button>
