@@ -1,1 +1,1 @@
-Your custom CSS and JS goes here!
+Your custom CSS and JS goes here.
