@@ -4,6 +4,7 @@ class WP_Enqueue_Helper {
 
     private static $theme_url;
     private static $plugin_url;
+    private static $default_scripts;
 
     public static function init() {
         self::$theme_url = get_template_directory_uri();
@@ -104,6 +105,14 @@ class WP_Enqueue_Helper {
         }
     }
 
+    public static function set_default_scripts($scripts) {
+        self::$default_scripts = $scripts;
+    }
+
+    public static function get_default_scripts() {
+        return self::$default_scripts;
+    }
+
     // recursive glob function
     private static function rglob($pattern, $flags = 0) {
         $files = glob($pattern, $flags);
@@ -113,8 +122,11 @@ class WP_Enqueue_Helper {
         return $files;
     }
 }
+
 // static variables init
 WP_Enqueue_Helper::init();
+include_once('templates/default_scripts.php');
+WP_Enqueue_Helper::set_default_scripts($default_scripts);
 
 // enqueue plugin assets
 function plugin_assets($hook) {

@@ -30,3 +30,10 @@ It has never been so easy before!
 1. WP Enqueue Option Menu
 2. WP Enqueue Scripts
 3. WP Enqueue Styles
+
+== Changelog ==
+= 1.1.0 =
+* Add WordPress default scripts.
+
+= 1.0.0 =
+* Initial version.
