@@ -81,9 +81,9 @@ class WP_Enqueue_Plugin {
         $domains = array('scripts', 'styles');
 
         foreach ((array)$domains as $domain) {
-            if (!empty($this->get_option($domain, 'path') &&
-                !empty($this->get_option($domain, 'cond')))
-            ) {
+            $path_option = $this->get_option($domain, 'path');
+            $cond_option = $this->get_option($domain, 'cond');
+            if (!empty($path_option) && !empty($cond_option)) {
                 $this->option_map[$domain] = WP_Enqueue_Helper::array_map_duplicates(
                     $this->get_option($domain, 'path'), $this->get_option($domain, 'cond')
                 );
