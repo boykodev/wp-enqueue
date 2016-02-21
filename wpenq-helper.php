@@ -47,7 +47,11 @@ class WP_Enqueue_Helper {
                 break;
         }
 
-        $dir = preg_replace('/https?:\/\/[^\/]+/i', '', $url);
+        if (is_multisite() && !is_main_site()) {
+            $dir = preg_replace('/https?:\/\/[^\/]+\/[^\/]+/i', '', $url);
+        } else {
+            $dir = preg_replace('/https?:\/\/[^\/]+/i', '', $url);
+        }
 
         $files = self::rglob($root . $dir . "/*.$ext");
         $result = array();

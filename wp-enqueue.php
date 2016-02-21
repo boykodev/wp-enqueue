@@ -5,7 +5,7 @@ Plugin Name: WP Enqueue
 Plugin URI: https://github.com/boykodev/wp-enqueue
 Description: This plugin makes it dramatically easier to enqueue scripts and styles. Manage it from a separate option menu page. You can enqueue in `head` or in `footer`, enqueue in admin dashboard, enqueue only for homepage,
 enqueue for all pages/posts/categories/archives or enqueue for a specific page/post/category. Choose from any script/style in theme folder or from a specific plugin folder. It has never been so easy before!
-Version: 1.1.0
+Version: 1.2.0
 Author: Serge Boyko
 Author URI: http://www.boykodev.com
 License: GPLv2 or later
@@ -30,7 +30,7 @@ Copyright 2005-2015 Automattic, Inc.
 */
 
 /* helper class */
-include_once('helper.php');
+include_once('wpenq-helper.php');
 
 class WP_Enqueue_Plugin {
 
@@ -119,7 +119,7 @@ class WP_Enqueue_Plugin {
 $wpenq = new WP_Enqueue_Plugin();
 
 /* add menu and settings */
-include_once('settings.php');
+include_once('wpenq-settings.php');
 
 /* enqueue scripts and styles */
 include_once('enqueue.php');

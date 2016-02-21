@@ -32,6 +32,9 @@ It has never been so easy before!
 3. WP Enqueue Styles
 
 == Changelog ==
+= 1.2.0 =
+* Multisite support.
+
 = 1.1.0 =
 * Add WordPress default scripts.
 
